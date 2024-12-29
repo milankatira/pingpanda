@@ -69,7 +69,7 @@ export const EmptyCategoryState = ({
 
           <span className="text-gray-400 text-sm">your-first-event.js</span>
         </div>
-
+        {/* @ts-ignore */}
         <SyntaxHighlighter
           language="javascript"
           style={atomDark}

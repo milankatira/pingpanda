@@ -251,6 +251,7 @@ const Page = () => {
 
                     <div className="overflow-hidden">
                       <div className="max-h-[30rem]">
+                        {/* @ts-ignore */}
                         <SyntaxHighlighter
                           language="typescript"
                           style={{
