@@ -31,7 +31,7 @@
     "framer-motion": "^11.11.9",
     "hono": "^4.5.5",
     "lucide-react": "^0.453.0",
-    "next": "^14.2.8",
+    "next": "^14.2.21",
     "prisma": "^5.18.0",
     "react": "^18",
     "react-dom": "^18",
