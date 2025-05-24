@@ -84,6 +84,7 @@ model Quota {
   year  Int
   month Int
   count Int @default(0)
+  resetAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
 }
