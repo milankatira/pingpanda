@@ -85,8 +85,11 @@ export const CreateEventCategoryModal = ({
   const selectedEmoji = watch("emoji")
 
   const onSubmit = (data: EventCategoryForm) => {
-    createEventCategory(data)
-  }
+    if (!data.emoji) {
+      data.emoji = '📄';
+    }
+    createEventCategory(data);
+  };
 
   return (
     <>
