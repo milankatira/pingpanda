@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
@@ -30,7 +27,7 @@ model User {
   updatedAt DateTime @updatedAt
 
   EventCategories EventCategory[]
-  events           Event[]
+  events          Event[]
   Quota           Quota[]
 
   @@index([email, apiKey])
@@ -47,7 +44,7 @@ model EventCategory {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  events     Event[]
+  events    Event[]
 
   @@unique([name, userId])
 }

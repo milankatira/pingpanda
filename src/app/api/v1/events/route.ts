@@ -59,13 +59,12 @@ export const POST = async (req: NextRequest) => {
     const currentMonth = currentData.getMonth() + 1
     const currentYear = currentData.getFullYear()
 
-    const quota = await db.quota.findUnique({
+    let quota = await db.quota.findUnique({
       where: {
         userId: user.id,
-        month: currentMonth,
-        year: currentYear,
       },
     })
+
 
     const quotaLimit =
       user.plan === "FREE"
@@ -153,8 +152,8 @@ export const POST = async (req: NextRequest) => {
       })
 
       await db.quota.upsert({
-        where: { userId: user.id, month: currentMonth, year: currentYear },
-        update: { count: { increment: 1 } },
+        where: { userId: user.id },
+        update: { count: { increment: 1 }, month: currentMonth, year: currentYear },
         create: {
           userId: user.id,
           month: currentMonth,
@@ -167,8 +166,6 @@ export const POST = async (req: NextRequest) => {
         where: { id: event.id },
         data: { deliveryStatus: "FAILED" },
       })
-
-      console.log(err)
 
       return NextResponse.json(
         {

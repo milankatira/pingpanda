@@ -7,30 +7,42 @@ export const dynamic = "force-dynamic"
 
 export const authRouter = router({
   getDatabaseSyncStatus: publicProcedure.query(async ({ c, ctx }) => {
-    const auth = await currentUser()
+    try {
+      const auth = await currentUser()
 
-    if (!auth) {
-      return c.json({ isSynced: false })
-    }
+      if (!auth) {
+        return c.json({ isSynced: false, error: "User not authenticated" })
+      }
 
-    const user = await db.user.findFirst({
-      where: { externalId: auth.id },
-    })
+      const user = await db.user.findFirst({
+        where: { externalId: auth.id },
+      })
 
-    console.log('USER IN DB:', user);
+      if (!user) {
+        try {
+          await db.user.create({
+            data: {
+              quotaLimit: 100,
+              externalId: auth.id,
+              email: auth.emailAddresses[0].emailAddress,
+            },
+          })
+        } catch (dbError) {
+          console.error("Failed to create user:", dbError)
+          return c.json({
+            isSynced: false,
+            error: "Failed to create user record",
+          })
+        }
+      }
 
-    if (!user) {
-      await db.user.create({
-        data: {
-          quotaLimit: 100,
-          externalId: auth.id,
-          email: auth.emailAddresses[0].emailAddress,
-        },
+      return c.json({ isSynced: true })
+    } catch (error) {
+      console.error("Database sync error:", error)
+      return c.json({
+        isSynced: false,
+        error: "Failed to sync with database",
       })
     }
-
-    return c.json({ isSynced: true })
   }),
 })
-
-// route.ts

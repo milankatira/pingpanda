@@ -46,15 +46,6 @@ export const Navbar = async () => {
                 >
                   Pricing
                 </Link>
-                <Link
-                  href="/sign-in"
-                  className={buttonVariants({
-                    size: "sm",
-                    variant: "ghost",
-                  })}
-                >
-                  Sign in
-                </Link>
 
                 <div className="h-8 w-px bg-gray-200" />
 
