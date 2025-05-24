@@ -1,3 +1,4 @@
+import { PRO_QUOTA } from "@/config"
 import { db } from "@/db"
 import { stripe } from "@/lib/stripe"
 import { headers } from "next/headers"
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
 
     await db.user.update({
       where: { id: userId },
-      data: { plan: "PRO" },
+      data: { plan: "PRO", quotaLimit: PRO_QUOTA.maxEventsPerMonth },
     })
   }
 
