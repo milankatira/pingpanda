@@ -1,38 +1,39 @@
-# PingPanda - A Modern Fullstack Event Monitoring SaaS
+### Project Overview
 
-Built with the Next.js App Router, Postgres, TypeScript, Tailwind & Clerk
+Welcome to Ping panda, a cutting-edge platform that combines Stripe payment processing with Discord API integration. This project aims to provide a seamless user experience for users and administrators alike.
 
-![Project Image](https://github.com/joschan21/pingpanda/blob/main/public/thumbnail.png)
+### Features
 
-## Features
-
-- 🛠️ Complete SaaS built in modern Next.js
-- 💻 Beautiful landing page included
-- 🎨 Custom artworks made by a professional illustrator
-- ✉️ Real-time event messages via Discord
-- 🖥️ Clean & intuitive event monitoring dashboard
-- 💳 Secure payments using Stripe
-- 🛍️ Customers can purchase your PRO plan
-- 🌟 Clean, modern UI on top of shadcn-ui
-- 🔑 Authentication using Clerk
-- ⌨️ 100% written in TypeScript
-- 🎁 ...much more
-
-## Getting started
-
-To get started with this project, run
-
-```bash
-  git clone https://github.com/joschan21/pingpanda.git
-```
-
-and copy the .env.example variables into a separate .env file, fill them out & and that's all you need to get started!
+- Complete SaaS built in modern Next.js
+- Beautiful landing page included
+- Custom artworks made by a professional illustrator
+- Real-time event messages via Discord
+- Clean & intuitive event monitoring dashboard
+- Secure payments using Stripe
+- Customers can purchase your PRO plan
+- Clean, modern UI on top of shadcn-ui
+- Authentication using Clerk
+- 100% written in TypeScript
 
 
-## Acknowledgements
+### Database Schema
 
-- [Clerk](https://link.joshtriedcoding.com/clerk) for making this project possible
+![Schema Diagram](schema-diagram.png)
 
-## License
+### Technologies Used
 
-[MIT](https://choosealicense.com/licenses/mit/)
+- Next.js
+- Prisma (database ORM)
+- Node.js
+- TypeScript
+- Stripe API
+- postgresql
+- Discord API
+- Tailwind CSS
+
+### Installation and Setup
+
+1. Install dependencies using npm or yarn: `npm install` or `yarn install`
+2. Configure environment variables (e.g., API keys, database connections) in your `.env` file
+3. Run the development server: `npm run dev` or `yarn dev`
+4. Build the application: `npm run build` or `yarn build`
