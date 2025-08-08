@@ -7,8 +7,7 @@
     "build": "pnpm run postinstall && next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "wrangler deploy",
-    "postinstall": "prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.3",
