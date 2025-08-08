@@ -1,6 +1,11 @@
 import { clerkMiddleware } from "@clerk/nextjs/server"
 
-export default clerkMiddleware()
+const isClerkEnabled = process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+
+export default isClerkEnabled ? clerkMiddleware() : (req: Request) => {
+  // If Clerk is not enabled, just pass the request through
+  return new Response(null, { status: 200 })
+}
 
 export const config = {
   matcher: [
