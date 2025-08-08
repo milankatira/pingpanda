@@ -2276,10 +2276,10 @@ highlightjs-vue@^1.0.0:
   resolved "https://registry.yarnpkg.com/highlightjs-vue/-/highlightjs-vue-1.0.0.tgz#fdfe97fbea6354e70ee44e3a955875e114db086d"
   integrity sha512-PDEfEF102G23vHmPhLyPboFCD+BkMGu+GuJe2d9/eH4FsCwvgBpnc9n0pGE+ffKdph38s6foEZiEjdgHdzp+IA==
 
-hono@^4.5.5:
-  version "4.6.15"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-4.6.15.tgz#86e9c12a1b8115c96ec8538ca7d7cb8e21e30e4b"
-  integrity sha512-OiQwvAOAaI2JrABBH69z5rsctHDzFzIKJge0nYXgtzGJ0KftwLWcBXm1upJC23/omNRtnqM0gjRMbtXshPdqhQ==
+hono@^4.6.5:
+  version "4.9.0"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-4.9.0.tgz#dee39d4a1859ef00dfec6e8b9bd4b0ef2e134870"
+  integrity sha512-JAUc4Sqi3lhby2imRL/67LMcJFKiCu7ZKghM7iwvltVZzxEC5bVJCsAa4NTnSfmWGb+N2eOVtFE586R+K3fejA==
 
 ignore@^5.2.0:
   version "5.3.2"
