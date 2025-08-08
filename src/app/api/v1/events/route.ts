@@ -186,6 +186,9 @@ export const POST = async (req: NextRequest) => {
     if (err instanceof z.ZodError) {
       return NextResponse.json({ message: err.message }, { status: 422 })
     }
+    if (err instanceof Error && err.message === "Invalid JSON request body") {
+      return NextResponse.json({ message: err.message }, { status: 400 });
+    }
 
     return NextResponse.json(
       { message: "Internal server error" },

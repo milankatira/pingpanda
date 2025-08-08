@@ -1,4 +1,4 @@
-# COPYPASTE LIST 
+# COPYPASTE LIST
 
 because there is no point in literally typing out svg icons lol
 
@@ -198,7 +198,7 @@ brand: {
 
 ### DASHBOARD CODE SNIPPET
 ```
-`await fetch('https://pingpanda.io/api/events', {
+`await fetch('https://pingpanda.io/api/v1/events', {
   method: 'POST',
   headers: {
     'Authorization': 'Bearer YOUR_API_KEY'

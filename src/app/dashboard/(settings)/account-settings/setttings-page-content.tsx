@@ -37,7 +37,7 @@ export const AccountSettings = ({
 
       <p className="mt-2 text-sm/6 text-gray-600">
         Don't know how to find your Discord ID?{" "}
-        <Link href="#" className="text-brand-600 hover:text-brand-500">
+        <Link href="https://www.youtube.com/watch?v=UjebrjZNnrM" className="text-brand-600 hover:text-brand-500" target="_blank">
           Learn how to obtain it here
         </Link>
         .
