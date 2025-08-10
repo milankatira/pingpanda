@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "pnpm run postinstall && next build",
+    "build": "yarn postinstall && next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "npx prisma generate"
