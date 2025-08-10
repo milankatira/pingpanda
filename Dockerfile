@@ -1,6 +1,6 @@
 # ---- Base Stage ----
 # Use a specific Node.js version for consistency.
-FROM node:22.5.1-alpine AS base
+FROM node:22.5.1-slim AS base
 WORKDIR /app
 COPY package.json yarn.lock ./
 COPY prisma ./prisma
