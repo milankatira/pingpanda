@@ -1,0 +1,84 @@
+# Google Cloud Build configuration for continuous integration and deployment.
+# This file defines a pipeline that:
+# 1. Builds a Docker image from the Dockerfile.
+# 2. Pushes the image to Google Artifact Registry.
+# 3. Deploys the image to Google Cloud Run.
+
+steps:
+  # Step 1: Build the Docker image
+  # This step builds the image using the provided Dockerfile and passes the necessary
+  # build-time environment variables as build arguments.
+  # Secrets are fetched from Google Secret Manager.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build'
+    args:
+      - 'build'
+      - '--build-arg'
+      - 'DATABASE_URL=${_DATABASE_URL}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_APP_URL=${_NEXT_PUBLIC_APP_URL}'
+      - '--build-arg'
+      - 'NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${_NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}'
+      - '--build-arg'
+      - 'CLERK_SECRET_KEY=$${_CLERK_SECRET_KEY}'
+      - '--build-arg'
+      - 'STRIPE_SECRET_KEY=$${_STRIPE_SECRET_KEY}'
+      - '--build-arg'
+      - 'STRIPE_WEBHOOK_SECRET=$${_STRIPE_WEBHOOK_SECRET}'
+      - '-t'
+      - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA'
+      - '.'
+    secretEnv: ['CLERK_SECRET_KEY', 'STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET']
+
+  # Step 2: Push the Docker image to Artifact Registry
+  # This step pushes the tagged image to your project's Artifact Registry.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push'
+    args: ['push', '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA']
+
+  # Step 3: Deploy to Cloud Run
+  # This step deploys the container image to Cloud Run.
+  # It sets both non-secret and secret environment variables for the service at runtime.
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - '${_SERVICE_NAME}'
+      - '--image'
+      - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA'
+      - '--region'
+      - '${_LOCATION}'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated' # Use --no-allow-unauthenticated for internal services
+      - '--update-env-vars'
+      - 'DATABASE_URL=${_DATABASE_URL},NEXT_PUBLIC_APP_URL=${_NEXT_PUBLIC_APP_URL},NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${_NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}'
+      - '--update-secrets'
+      - 'CLERK_SECRET_KEY=CLERK_SECRET_KEY:latest,STRIPE_SECRET_KEY=STRIPE_SECRET_KEY:latest,STRIPE_WEBHOOK_SECRET=STRIPE_WEBHOOK_SECRET:latest'
+
+# Substitutions: These are variables you can set when you run the trigger.
+substitutions:
+  _LOCATION: 'us-central1' # e.g., us-central1
+  _REPOSITORY: 'pingpanda-repo' # Your Artifact Registry repository name
+  _IMAGE_NAME: 'pingpanda-app' # The name of your Docker image
+  _SERVICE_NAME: 'pingpanda-service' # The name of your Cloud Run service
+  _DATABASE_URL: 'your-database-url-here' # Your database connection string
+  _NEXT_PUBLIC_APP_URL: 'your-production-app-url' # e.g., https://your-app.com
+  _NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: 'your-clerk-publishable-key'
+
+# Available Secrets: This section makes secrets from Secret Manager available to the build steps.
+# You must create these secrets in Secret Manager before running the build.
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/CLERK_SECRET_KEY/versions/latest
+      env: 'CLERK_SECRET_KEY'
+    - versionName: projects/$PROJECT_ID/secrets/STRIPE_SECRET_KEY/versions/latest
+      env: 'STRIPE_SECRET_KEY'
+    - versionName: projects/$PROJECT_ID/secrets/STRIPE_WEBHOOK_SECRET/versions/latest
+      env: 'STRIPE_WEBHOOK_SECRET'
+
+# Images to push to the registry after a successful build.
+images:
+  - '${_LOCATION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA'
