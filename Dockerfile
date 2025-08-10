@@ -3,6 +3,7 @@
 FROM node:22.5.1-alpine AS base
 WORKDIR /app
 COPY package.json yarn.lock ./
+COPY prisma ./prisma
 
 # ---- Dependencies Stage ----
 # Install all dependencies, including devDependencies, for building the app.

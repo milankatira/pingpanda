@@ -9,6 +9,9 @@
     "lint": "next lint",
     "postinstall": "npx prisma generate"
   },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
   "dependencies": {
     "@clerk/nextjs": "^5.7.3",
     "@discordjs/rest": "^2.4.0",
