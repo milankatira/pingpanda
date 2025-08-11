@@ -1,42 +1,39 @@
-# ---- Base Stage ----
-# Use a specific Node.js version for consistency.
-FROM node:22.5.1-slim AS base
-WORKDIR /app
-COPY package.json yarn.lock ./
-COPY prisma ./prisma
+FROM node:18-alpine AS base
 
-# ---- Dependencies Stage ----
-# Install all dependencies, including devDependencies, for building the app.
 FROM base AS deps
-RUN yarn install --frozen-lockfile
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-# ---- Builder Stage ----
-# Build the Next.js application.
-FROM deps AS builder
+COPY package*.json ./
+RUN npm ci
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# Set build-time environment variables
-ARG DATABASE_URL
-ARG NEXT_PUBLIC_APP_URL
-ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-ARG CLERK_SECRET_KEY
-ARG STRIPE_SECRET_KEY
-ARG STRIPE_WEBHOOK_SECRET
 
-ENV DATABASE_URL=${DATABASE_URL}
-ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
-ENV NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-ENV CLERK_SECRET_KEY=${CLERK_SECRET_KEY}
-ENV STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
-ENV STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
-RUN yarn build
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# ---- Runner Stage ----
-# Create the final, smaller production image.
+RUN npm run build
+
 FROM base AS runner
 WORKDIR /app
-COPY --from=builder /app/.next ./.next
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/public ./public
-# Set the command to start the app
-CMD ["yarn", "start"]
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD ["npm", "start"]
