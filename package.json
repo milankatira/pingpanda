@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8080",
     "build": "yarn postinstall && next build",
-    "start": "next start -p ${PORT:-3000}",
+    "start": "next start -p ${PORT:-8080}",
     "lint": "next lint",
     "postinstall": "npx prisma generate"
   },
